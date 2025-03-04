@@ -44,23 +44,17 @@ def predict():
         return jsonify({"error": str(e)})
 
 # Webhook สำหรับ LINE Chatbot
-@app.route("/callback", methods=["POST"])
-def callback():
-    app.logger.info("Webhook received")
-    signature = request.headers.get("X-Line-Signature", "")
+@app.route('/webhook', methods=['POST']) 
+def webhook():
+    signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
-    
-    if not signature:
-        app.logger.error("Missing X-Line-Signature")
-        return "Missing signature", 400
 
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
-        app.logger.error("Invalid signature")
-        return "Invalid signature", 400
-    
-    return "OK", 200
+        return "Invalid signature", 400  
+
+    return "OK", 200 
 
 
 # ฟังก์ชันตอบกลับข้อความ

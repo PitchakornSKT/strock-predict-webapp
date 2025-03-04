@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroke Prediction</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#"><img src="static/images/logo.png" width="60"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link" href="#">Home</a>
+              <a class="nav-link" href="#">Prediction</a>
+              <a class="nav-link" href="#">Our Team</a>
+            </div>
+            <div class="d-flex">
+                <img src="static\images\thailand.png" alt="TH" width="30" height="30" class="me-2 flag" onclick="changeLanguage('th')">
+                <img src="static\images\united-states.png" alt="EN" width="30" height="30" class="flag" onclick="changeLanguage('en')">
+            </div>
+          </div>
+        </div>
+    </nav>
+
+    <div class="form-predict container mt-5 p-4 bg-white" style="max-width: 600px;">
+        <h2 class="text-center mb-4" id="title">Stroke Prediction</h2>
+        <form id="prediction-form">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label" id="label-gender" for="gender">Gender</label>
+                    <select class="form-control form-select-sm" id="gender">
+                        <option value="0">Male</option>
+                        <option value="1">FeMale</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" id="label-age" for="age">Age</label>
+                    <input type="number" class="form-control form-control-sm" id="age" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" id="label-hypertension" for="hypertension">Hypertension</label>
+                <select class="form-control form-control-sm" id="hypertension">
+                    <option value="0" id="no">No</option>
+                    <option value="1" id="yes">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" id="label-heart" for="heart_disease">Heart Disease</label>
+                <select class="form-control form-control-sm" id="heart_disease">
+                    <option value="0" id="no-hd">No</option>
+                    <option value="1" id="yes-hd">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" id="label-married" for="ever_married">Ever Married</label>
+                <select class="form-control form-control-sm" id="ever_married">
+                    <option value="0" id="not-ever">No</option>
+                    <option value="1" id="ever">Yes</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" id="label-work" for="work_type">Work Type</label>
+                <select class="form-control form-control-sm" id="work_type">
+                    <option id="work-children" value="0">Children</option>
+                      <option id="work-govt" value="1">Govt Job</option>
+                      <option id="work-never" value="2">Never Worked</option>
+                      <option id="work-private" value="3">Private</option>
+                      <option id="work-self" value="4">Self-employed</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" id="label-residence" for="residence_type">Residence Type</label>
+                <select class="form-control form-control-sm" id="residence_type">
+                    <option id="residence-rural" value="0">Rural</option>
+                    <option id="residence-urban" value="1">Urban</option>
+                </select>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label" id="label-glucose" for="avg_glucose_level">Avg Glucose Level</label>
+                    <input type="number" step="0.01" class="form-control form-control-sm" id="avg_glucose_level" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" id="label-bmi" for="bmi">BMI</label>
+                    <input type="number" step="0.1" class="form-control form-control-sm" id="bmi" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" id="label-smoking" for="smoking_status">Smoking Status</label>
+                <select class="form-control form-control-sm" id="smoking_status">
+                    <option value="0" id="label-unknow">Unknown</option>
+                    <option value="1" id="label-formerly">Formerly Smoked</option>
+                    <option value="2" id="label-never">Never Smoked</option>
+                    <option value="3" id="label-smokes">Smokes</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="btn-predict">Predict</button>
+        </form>
+    </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Prediction Result</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="prediction-result"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container text-center">
+            <div class="footer-content row">
+              <div class="footer-l-content col">
+                <h1>Add Line</h1>
+                <p>เพื่อสะดวกต่อการใช้งาน<br>เราจึงพัฒนาแชทบอทเพื่อให้ผู้ใช้งานสามารถการพยากรณ์ได้สะดวกยิ่งขึ้น!</p>
+              </div>
+              <div class="col">
+                <a href=""><img src="https://www.ktoptic.com/wp-content/uploads/2023/03/M_gainfriends_2dbarcodes_BW-1.png" class="qr-img"></a>
+              </div>
+            </div>
+    </div>
+    
+
+
+    <script>
+        const translations = {
+            en: {
+                title: "Stroke Prediction",
+                "label-gender": "Gender",
+                "label-age": "Age",
+                "label-hypertension": "Hypertension",
+                "label-heart": "Heart Disease",
+                "label-married": "Ever Married",
+                "label-work": "Work Type",
+                "label-residence": "Residence Type",
+                "label-glucose": "Avg Glucose Level",
+                "label-bmi": "BMI",
+                "label-smoking": "Smoking Status",
+                "btn-predict": "Predict",
+                "alert-title": "Prediction Result",
+                "alert-message": "The predicted result is: "
+            },
+            th: {
+                title: "พยากรณ์โรคหลอดเลือดสมอง",
+                "label-gender": "เพศ",
+                "label-age": "อายุ",
+                "label-hypertension": "ความดันโลหิตสูง",
+                "label-heart": "โรคหัวใจ",
+                "label-married": "เคยแต่งงาน",
+                "label-work": "ประเภทงาน",
+                "label-residence": "ที่อยู่อาศัย",
+                "label-glucose": "ระดับน้ำตาลในเลือด",
+                "label-bmi": "ค่าดัชนีมวลกาย (BMI)",
+                "label-smoking": "สถานะการสูบบุหรี่",
+                "btn-predict": "ทำนาย",
+                "alert-title": "ผลการทำนาย",
+                "alert-message": "ผลลัพธ์ที่คาดการณ์คือ: ",
+                "label-unknow": "ไม่ระบุ",
+                "not-ever": "ไม่เคย",
+                "ever": "เคย",
+                "no": "ไม่เป็น",
+                "yes": "เป็น",
+                "no-hd": "ไม่เป็น",
+                "yes-hd": "เป็น",
+                "work-children": "เด็ก",
+                "work-govt": "ข้าราชการ",
+                "work-never": "ว่างงาน",
+                "work-private": "งานเอกชน",
+                "work-self": "ธุรกิจส่วนตัว",
+                "residence-rural": "พื้นที่ชนบท",
+                "residence-urban": "พื้นที่เมือง",
+            }
+        };
+
+        function changeLanguage(lang) {
+            document.getElementById("title").innerText = translations[lang].title;
+            document.getElementById("btn-predict").innerText = translations[lang]["btn-predict"];
+            Object.keys(translations[lang]).forEach(id => {
+                if (document.getElementById(id)) {
+                    document.getElementById(id).innerText = translations[lang][id];
+                }
+            });
+
+            localStorage.setItem("language", lang);
+        }
+
+        document.getElementById("prediction-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const lang = localStorage.getItem("language") || "en";
+            const resultTitle = translations[lang]["alert-title"];
+            const resultMessage = translations[lang]["alert-message"];
+
+            const randomResult = Math.random() > 0.5 ? "Stroke" : "No Stroke"; // จำลองผลลัพธ์
+
+            document.getElementById("resultModalLabel").innerText = resultTitle;
+            document.getElementById("prediction-result").innerText = resultMessage + randomResult;
+
+            // แสดง Modal
+            const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            resultModal.show();
+
+            // รีเซ็ตฟอร์มหลังจากแสดงผล
+            document.getElementById("prediction-form").reset();
+        });
+
+
+        // ตั้งค่าภาษาเริ่มต้นเป็นอังกฤษ
+        localStorage.setItem("language", "en");
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

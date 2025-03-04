@@ -46,13 +46,22 @@ def predict():
 # Webhook สำหรับ LINE Chatbot
 @app.route("/callback", methods=["POST"])
 def callback():
-    signature = request.headers["X-Line-Signature"]
+    app.logger.info("Webhook received")
+    signature = request.headers.get("X-Line-Signature", "")
     body = request.get_data(as_text=True)
+    
+    if not signature:
+        app.logger.error("Missing X-Line-Signature")
+        return "Missing signature", 400
+
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        app.logger.error("Invalid signature")
         return "Invalid signature", 400
-    return "OK"
+    
+    return "OK", 200
+
 
 # ฟังก์ชันตอบกลับข้อความ
 @handler.add(MessageEvent, message=TextMessage)

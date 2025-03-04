@@ -16,14 +16,13 @@ df.dropna(inplace=True)
 
 df['gender'] = df['gender'].map({'Male': 1, 'Female': 0, 'Other': 2})
 
-# 4. แปลงค่าคอลัมน์อื่น ๆ ที่เป็นข้อความให้เป็นตัวเลข
 df['ever_married'] = df['ever_married'].map({'Yes': 1, 'No': 0})
 df['work_type'] = df['work_type'].astype('category').cat.codes
 df['Residence_type'] = df['Residence_type'].map({'Urban': 1, 'Rural': 0})
 df['smoking_status'] = df['smoking_status'].astype('category').cat.codes
 
-X = df.drop(columns=['id', 'stroke'])  # ใช้ทุกคอลัมน์ยกเว้น id และ stroke เป็น Features
-y = df['stroke']  # ใช้ stroke เป็น Label
+X = df.drop(columns=['id', 'stroke']) 
+y = df['stroke']  
 
 # Train-Test
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

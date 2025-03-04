@@ -44,18 +44,15 @@ def predict():
         return jsonify({"error": str(e)})
 
 # Webhook สำหรับ LINE Chatbot
-@app.route('/webhook', methods=['POST']) 
-def webhook():
-    signature = request.headers['X-Line-Signature']
+@app.route("/callback", methods=["POST"])
+def callback():
+    signature = request.headers["X-Line-Signature"]
     body = request.get_data(as_text=True)
-
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
-        return "Invalid signature", 400  
-
-    return "OK", 200 
-
+        return "Invalid signature", 400
+    return "OK"
 
 # ฟังก์ชันตอบกลับข้อความ
 @handler.add(MessageEvent, message=TextMessage)
@@ -84,6 +81,7 @@ def text_to_features(user_text):
     ฟังก์ชันแปลงข้อความจากผู้ใช้เป็นฟีเจอร์ที่ใช้พยากรณ์
     """
     try:
+        # แยกข้อความที่ผู้ใช้ส่งออกเป็นฟีเจอร์
         features = list(map(float, user_text.split(",")))
         
         # ตรวจสอบว่าจำนวนฟีเจอร์ครบหรือไม่
@@ -91,6 +89,9 @@ def text_to_features(user_text):
         if len(features) != expected_features:
             raise ValueError(f"จำนวนฟีเจอร์ไม่ถูกต้อง ({len(features)}/{expected_features}) กรุณาใส่ข้อมูลให้ครบ")
 
+        # ตรวจสอบข้อมูลที่อยู่ใน features ถ้าต้องการ
+        app.logger.info(f"Converted features: {features}")
+        
         return features
     except ValueError as e:
         raise ValueError(f"รูปแบบข้อมูลไม่ถูกต้อง: {str(e)}")
